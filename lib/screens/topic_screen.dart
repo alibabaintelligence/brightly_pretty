@@ -1,6 +1,6 @@
 import 'package:brightly_pretty/widgets/feedback_popup.dart';
+import 'package:brightly_pretty/widgets/recommendations.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +38,14 @@ class _TopicScreenState extends State<TopicScreen> {
         (topic) => topic.topicId == widget.topicId,
       );
 
+  void _showRecommendation(BuildContext context, String recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) =>
+          RecommendationsPopup(recommendation: recommendation),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,9 +68,6 @@ class _TopicScreenState extends State<TopicScreen> {
               child: CupertinoActivityIndicator(),
             );
           }
-
-          print("questions: ${topic.questions}");
-
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(
               vertical: 30.0,
@@ -90,6 +95,71 @@ class _TopicScreenState extends State<TopicScreen> {
                   ),
                   maxLines: 6,
                   overflow: TextOverflow.ellipsis,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      minSize: 0.0,
+                      onPressed: () {
+                        _showRecommendation(context, 'Ponte al tiro cabrón');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              const Color.fromARGB(255, 255, 144, 198),
+                              const Color.fromARGB(255, 182, 162, 255),
+                            ],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 255, 173, 250),
+                              offset: const Offset(0, 1),
+                              blurRadius: 6,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        margin: const EdgeInsets.only(
+                          top: 20,
+                          bottom: 15,
+                          left: 10,
+                          right: 10,
+                        ),
+                        width: 300.0,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 7,
+                          horizontal: 10,
+                        ),
+                        child: Expanded(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.star_rate_rounded,
+                                color: Color.fromARGB(255, 90, 0, 180),
+                                size: 25.0,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Expanded(
+                                child: Text(
+                                  'Personalized Recommendations',
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 13.0,
+                                    color:
+                                        const Color.fromARGB(255, 90, 0, 180),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 ...(topic.questions..shuffle()).map(
@@ -136,7 +206,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 218, 182, 255),
+            color: const Color.fromARGB(255, 182, 255, 204),
             borderRadius: BorderRadius.circular(15),
           ),
           margin: const EdgeInsets.only(
@@ -155,7 +225,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
               children: [
                 const Icon(
                   Icons.question_mark_rounded,
-                  color: Color.fromARGB(255, 90, 0, 180),
+                  color: Color.fromARGB(255, 0, 99, 41),
                   size: 18.0,
                 ),
                 const SizedBox(width: 12.0),
@@ -165,7 +235,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
                       fontSize: 14.0,
-                      color: const Color.fromARGB(255, 90, 0, 180),
+                      color: const Color.fromARGB(255, 0, 99, 41),
                     ),
                   ),
                 ),

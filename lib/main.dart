@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       minSize: 0.0,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.indigoAccent,
+                          color: const Color.fromARGB(255, 188, 198, 255),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.indigo.shade100,
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(
                               course.name,
                               style: GoogleFonts.poppins(
-                                color: Colors.white,
+                                color: const Color.fromARGB(255, 86, 0, 184),
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(
                               course.desc,
                               style: GoogleFonts.poppins(
-                                color: Colors.white,
+                                color: const Color.fromARGB(255, 86, 0, 184),
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
                               ),
