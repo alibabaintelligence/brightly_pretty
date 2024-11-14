@@ -41,6 +41,7 @@ dependencies:
   google_fonts: ^6.2.1
   file_picker: ^5.0.0
   audioplayers: ^6.1.0
+  flutter_svg: ^2.0.14
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,8 @@ flutter:
   assets:
     - assets/audio/win.mp3
     - assets/audio/fail.mp3
+
+    - assets/svgs/crown.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

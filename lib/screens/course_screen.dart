@@ -2,6 +2,8 @@ import 'package:brightly_pretty/providers/manzanares_provider.dart';
 import 'package:brightly_pretty/screens/topic_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +28,27 @@ class _CourseScreenState extends State<CourseScreen> {
   Course get course => _manzanaresProvider.courses.firstWhere(
         (course) => course.courseId == widget.courseId,
       );
+
+  final ScrollController _scrollController = ScrollController();
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Schedule the scroll to happen after the layout is fully built
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +77,7 @@ class _CourseScreenState extends State<CourseScreen> {
             print(course.topics);
 
             return SingleChildScrollView(
+              controller: _scrollController,
               child: Stack(
                 children: [
                   Column(
@@ -63,7 +87,7 @@ class _CourseScreenState extends State<CourseScreen> {
                         width: double.infinity,
                         height: 400.0,
                         decoration: const BoxDecoration(
-                          color: Colors.black,
+                          color: Color.fromARGB(255, 34, 82, 241),
                         ),
                       ),
                       Container(
@@ -96,8 +120,8 @@ class _CourseScreenState extends State<CourseScreen> {
                       const Row(),
                       const SizedBox(height: 50),
                       Container(
-                        height: 140,
-                        width: 140,
+                        height: 110,
+                        width: 110,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(900),
                           color: Colors.amberAccent,
@@ -109,12 +133,16 @@ class _CourseScreenState extends State<CourseScreen> {
                             ),
                           ],
                         ),
+                        child: SvgPicture.asset(
+                          'assets/svgs/crown.svg',
+                          height: 60.0,
+                          width: 60.0,
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
                       const SizedBox(height: 50),
                       ...course.topics.reversed.map(
                         (topic) {
-                          print(topic.topicId);
-
                           final _manzanaresProvider =
                               context.read<ManzanaresProvider>();
 
@@ -134,8 +162,15 @@ class _CourseScreenState extends State<CourseScreen> {
                             minSize: 0.0,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 125, 14, 244),
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.indigo.shade100,
+                                    offset: const Offset(0, 0),
+                                    blurRadius: 5,
+                                  ),
+                                ],
                               ),
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 10,
@@ -150,7 +185,7 @@ class _CourseScreenState extends State<CourseScreen> {
                                 children: [
                                   const Icon(
                                     CupertinoIcons.book_solid,
-                                    color: Colors.white,
+                                    color: Color.fromARGB(255, 125, 14, 244),
                                     size: 18.0,
                                   ),
                                   const SizedBox(width: 12.0),
@@ -159,7 +194,8 @@ class _CourseScreenState extends State<CourseScreen> {
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16.0,
-                                      color: Colors.white,
+                                      color: const Color.fromARGB(
+                                          255, 125, 14, 244),
                                     ),
                                   ),
                                 ],

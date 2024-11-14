@@ -1,3 +1,4 @@
+import 'package:brightly_pretty/widgets/feedback_popup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -148,24 +149,28 @@ class _QuestionWidgetState extends State<QuestionWidget> {
             vertical: 10,
             horizontal: 15,
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.question_mark_rounded,
-                color: Color.fromARGB(255, 90, 0, 180),
-                size: 18.0,
-              ),
-              const SizedBox(width: 12.0),
-              Text(
-                widget.question.question,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14.0,
-                  color: const Color.fromARGB(255, 90, 0, 180),
+          child: Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.question_mark_rounded,
+                  color: Color.fromARGB(255, 90, 0, 180),
+                  size: 18.0,
                 ),
-              ),
-            ],
+                const SizedBox(width: 12.0),
+                Expanded(
+                  child: Text(
+                    widget.question.question,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.0,
+                      color: const Color.fromARGB(255, 90, 0, 180),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         ...widget.question.availableAnswers.map(
@@ -179,7 +184,25 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (selectedAnswer == correctAnswer) {
                           player.play(AssetSource('audio/win.mp3'));
+
+                          showFeedbackPopup(
+                            context,
+                            'Correct!',
+                            Icons
+                                .check_rounded, // Your SVG icon for correct answers
+                            Color.fromARGB(255, 0, 177, 68),
+                            'assets/sounds/correct.mp3', // Sound for correct answer
+                          );
                         } else {
+                          showFeedbackPopup(
+                            context,
+                            'Wrong!',
+                            Icons
+                                .close_rounded, // Your SVG icon for incorrect answers
+                            Color.fromARGB(255, 213, 0, 35),
+                            'assets/sounds/wrong.mp3', // Sound for incorrect answer
+                          );
+
                           player.play(AssetSource('audio/fail.mp3'));
                         }
                       });
@@ -208,18 +231,15 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                 vertical: 7,
                 horizontal: 11,
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    ans,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13.0,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                    ),
+              child: Expanded(
+                child: Text(
+                  ans,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13.0,
+                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
-                ],
+                ),
               ),
             ),
           ),
