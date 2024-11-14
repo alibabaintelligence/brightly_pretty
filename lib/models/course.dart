@@ -17,24 +17,26 @@ class Topic {
   final String name;
   final String desc;
   final String? docLink;
-  final List<Quiz> quizzes;
+  final List<Question> questions;
 
   Topic({
     required this.topicId,
     required this.name,
     required this.desc,
     this.docLink,
-    required this.quizzes,
+    required this.questions,
   });
 }
 
-class Quiz {
-  final int quizId;
+class Question {
+  final int questionId;
+  final String question;
   final List<String> availableAnswers;
   final String correctAnswer;
 
-  Quiz({
-    required this.quizId,
+  Question({
+    required this.questionId,
+    required this.question,
     required this.availableAnswers,
     required this.correctAnswer,
   });

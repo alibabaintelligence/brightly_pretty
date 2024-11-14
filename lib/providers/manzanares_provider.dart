@@ -23,7 +23,7 @@ class ManzanaresUser with ChangeNotifier {
 
 class ManzanaresProvider with ChangeNotifier {
   ManzanaresUser? get currentUser => _currentUser;
-  ManzanaresUser? _currentUser = null;
+  ManzanaresUser? _currentUser;
 
   final List<Course> _courses = [];
   List<Course> get courses => [..._courses];
@@ -51,7 +51,7 @@ class ManzanaresProvider with ChangeNotifier {
         userId: decodedResponse['id'],
         email: decodedResponse['email'],
         name: decodedResponse['name'],
-        finishedTopics: decodedResponse['finished_topics'],
+        finishedTopics: [decodedResponse['finished_topics'][0]],
         groups: [decodedResponse['groups'][0]],
       );
 
@@ -96,8 +96,6 @@ class ManzanaresProvider with ChangeNotifier {
   }
 
   Future<void> getTopics(int courseId) async {
-    print('GET TOPICS RUNNING');
-
     final course = _courses.firstWhere(
       (course) => course.courseId == courseId,
     );
@@ -127,7 +125,62 @@ class ManzanaresProvider with ChangeNotifier {
               topicId: topic['id'],
               name: topic['name'],
               desc: topic['description'],
-              quizzes: [],
+              questions: [],
+            ),
+          );
+        },
+      );
+
+      notifyListeners();
+    } else {
+      print(response.body);
+      print('Error: ${response.statusCode}');
+    }
+  }
+
+  Future<void> getQuestions({
+    required int courseId,
+    required int topicId,
+  }) async {
+    final course = _courses.firstWhere(
+      (course) => course.courseId == courseId,
+    );
+
+    final topic = course.topics.firstWhere(
+      (topic) => topic.topicId == topicId,
+    );
+
+    final url = Uri.parse(
+        'http://10.22.140.168:8000/questions/quizview/?topic_id=$topicId');
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final decodedResponseMap = json.decode(utf8.decode(response.bodyBytes));
+
+      print('Respuesta exitosa: $decodedResponseMap');
+      print(decodedResponseMap.runtimeType);
+
+      topic.questions.clear();
+
+      decodedResponseMap.forEach(
+        (question) {
+          topic.questions.add(
+            Question(
+              questionId: question['id'],
+              question: question['question'],
+              availableAnswers:
+                  (question['answers'].split("\n") as List<String>)
+                    ..forEach(
+                      (ans) => ans = ans.trim(),
+                    ),
+              correctAnswer:
+                  (question['correct_answer'] as String).trim().substring(0, 2),
             ),
           );
         },
